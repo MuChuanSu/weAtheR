@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#A2F1D7"
+    tools:context=".ArActivity">
+
+
+
+    <fragment
+        android:id="@+id/fragment"
+        android:name="com.google.ar.sceneform.ux.ArFragment"
+        android:layout_width="match_parent"
+        android:layout_height="672dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="54dp"
+        android:layout_marginBottom="5dp" />
+
+    <ImageButton
+        android:id="@+id/backToDisplayId"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+
+        android:background="@drawable/roundedbtn"
+        android:src="@drawable/ic_baseline_arrow_back_ios_24" />
+
+</RelativeLayout>

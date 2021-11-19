@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/infoLayoutId"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/pic"
+    tools:context=".displayInfo"
+    android:orientation="vertical" >
+
+    <ImageButton
+        android:id="@+id/backToMainId"
+        android:layout_width="60dip"
+        android:layout_height="60dip"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/roundedbtn"
+        android:src="@drawable/ic_baseline_arrow_back_ios_24"/>
+
+
+    <ImageView
+        android:id="@+id/gifPlaceId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:maxWidth="160dp"
+        android:maxHeight="160dp"
+        android:layout_gravity="center"
+        android:scaleType="fitXY"
+        tools:srcCompat="@tools:sample/avatars"
+        android:background="@drawable/infotextviewback"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:id="@+id/cityNameTVId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/infotextviewback"
+        android:gravity="center"
+        android:text="city"
+        android:textColor="@color/white"
+        android:textSize="60sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/minTempTVId"
+            android:textColor="@color/white"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="Low"
+
+            android:textSize="20sp" />
+        <TextView
+            android:id="@+id/tempTVId"
+            android:textColor="@color/white"
+            android:background="@drawable/infotextviewback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:layout_marginRight="10dp"
+            android:text="TEMP"
+            android:textSize="50sp" />
+
+        <TextView
+            android:id="@+id/maxTempTVId"
+            android:textColor="@color/white"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="10dp"
+
+
+            android:text="High"
+            android:textSize="20sp" />
+
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/feelsLikeTVId"
+        android:textColor="@color/white"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="12sp"
+        android:text="Feels like :"
+        android:layout_marginBottom="10dp"/>
+
+
+    <TextView
+        android:id="@+id/descriptionTVId"
+        android:textColor="@color/white"
+        android:background="@drawable/infotextviewback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:text="Main:sub"
+        android:gravity="center_horizontal"
+        android:layout_marginRight="40sp"
+        android:layout_marginLeft="40sp"
+        android:layout_marginBottom="30dp"
+        android:layout_gravity="center_horizontal"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/pressureTVId"
+            android:textColor="@color/white"
+            android:background="@drawable/infotextviewback"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="Pressure"
+            android:gravity="left"
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/humidityTVId"
+            android:background="@drawable/infotextviewback"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:gravity="right"
+            android:text="Humidity"
+            android:layout_marginLeft="80dp"
+            android:layout_marginBottom="30dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/windSpeedTVId"
+            android:background="@drawable/infotextviewback"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="40dp"
+            android:text="WindSpeed"/>
+        <TextView
+            android:id="@+id/windDegTVId"
+            android:background="@drawable/infotextviewback"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_gravity="left"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="80dp"
+            android:text="Degree"/>
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/arButtonId"
+        android:background="@drawable/roundedbtn"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ar_icon" />
+
+
+</LinearLayout>
+
+
