@@ -1,21 +1,19 @@
 package com.example.weather;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.SoundEffectConstants;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
 
-public class displayInfo extends AppCompatActivity implements BackToLast,Observer{
+public class displayInfo extends AppCompatActivity implements BackToLast{
     private TextView testInfo;
     private double temp,temp_max,temp_min,temp_feel,pressure,humidity,visibility,speed,deg,timezone;
     private String mainDescription,subDescription,city;

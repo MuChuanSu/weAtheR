@@ -1,10 +1,6 @@
 package com.example.weather;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Dao;
-import androidx.room.Database;
 import android.content.Intent;
-import android.media.effect.Effect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.VibrationEffect;
@@ -18,6 +14,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -29,10 +27,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+public class MainActivity extends AppCompatActivity  {
 
-public class MainActivity extends AppCompatActivity implements Subject {
-    private ArrayList<Observer> observerArray;
     private Vibrator vib;
     private Button searchButton;
     public ImageButton setBtn,abtBtn;
@@ -47,6 +43,10 @@ public class MainActivity extends AppCompatActivity implements Subject {
     public CityDatabase CDB;
     public VideoView vv;
     public Uri videoUri;
+
+
+
+
 
     
 
@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements Subject {
                 v.playSoundEffect(SoundEffectConstants.CLICK);
 
                 getInfoMethod();
+
+
                 //inside onClick method is getInfoMethod()
                 //which gets the json response and convert info into variables
             }
@@ -133,6 +135,10 @@ public class MainActivity extends AppCompatActivity implements Subject {
     }
 
 
+
+
+
+
     public void getInfoMethod(){
         String finalUrl ="";
         String cityName = searchBar.getText().toString().trim();
@@ -147,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements Subject {
 
                 try {
                     JSONObject allJsonRes = new JSONObject(response);
+
                     String name = allJsonRes.getString("name");
                     double visibility = allJsonRes.getDouble("visibility");
                     int timeZone =allJsonRes.getInt("timezone");
@@ -236,31 +243,5 @@ public class MainActivity extends AppCompatActivity implements Subject {
         //add the request into the queue,Volley will handle it and send it
         //and then onResponse() or onErrorResponse() will run
         //https://developer.android.com/training/volley/simple
-    }
-
-
-
-    @Override
-    public void registerObserver(Observer o) {
-        observerArray.add(o);
-
-    }
-
-    @Override
-    public void removeObserver(Observer o) {
-        if (observerArray.size()>0){
-            observerArray.remove(o);
-        }
-
-    }
-
-    @Override
-    public void notifyObservers() {
-        if(observerArray.size()>0){
-            for (Observer observer : observerArray){
-                observer.update();
-            }
-        }
-
     }
 }
