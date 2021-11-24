@@ -19,7 +19,6 @@ public interface CityDao {
     String getName();
     //for testing,result should be 'Waterloo'
 
-
     @Query("Select country FROM citytable where name = 'Taipei' ")
     String getCountry();
     //for testing,result should be 'TW'
