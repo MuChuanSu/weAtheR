@@ -56,10 +56,6 @@ public class MainActivity extends AppCompatActivity  {
 
         MainViewModel vM = new ViewModelProvider(this).get(MainViewModel.class);
 
-
-
-
-
         GoToAbout();
         GoToSettings();
         setSuggestions();

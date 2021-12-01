@@ -57,6 +57,7 @@
             android:layout_width="103dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:layout_marginLeft="20dp"
 
 
             android:background="@android:color/transparent"

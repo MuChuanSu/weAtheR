@@ -1,7 +1,5 @@
 package com.example.weather;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,11 +9,12 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.ar.core.Anchor;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
 import com.google.ar.sceneform.AnchorNode;
-import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.assets.RenderableSource;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.Renderable;
@@ -28,7 +27,7 @@ import java.util.concurrent.CompletableFuture;
 public class ArActivity extends AppCompatActivity implements BackToLast{
     private ArFragment arFragment;
     private ModelRenderable modelRenderable;
-    private String MODEL_URL="https://github.com/MuChuanSu/Model/raw/main/testscene.glb";
+
     private ImageButton backBtn;
     private ModelRenderable.Builder renBuilder;
     private CompletableFuture<ModelRenderable> future;
@@ -47,7 +46,12 @@ public class ArActivity extends AppCompatActivity implements BackToLast{
 
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
 
-        Uri uriModel = Uri.parse(MODEL_URL);
+        //
+
+        Intent ii = getIntent();
+        String mainDes = ii.getStringExtra("MainDescription");
+
+        Uri uriModel = Uri.parse(pickArModel(mainDes));
 
 
 
@@ -65,6 +69,47 @@ public class ArActivity extends AppCompatActivity implements BackToLast{
         });
     }
 
+    private String pickArModel(String mainDes) {
+        String Url = "";
+        String Main = mainDes.split("\\:")[0];
+        switch(Main){
+            case "Clear":
+                Url = "https://github.com/MuChuanSu/Model/raw/main/Test.glb";
+                break;
+            case "Rain":
+                Url = "https://github.com/MuChuanSu/Model/raw/main/Test.glb";
+                break;
+            case"Clouds":
+                Url = "https://github.com/MuChuanSu/Model/raw/main/Test.glb";
+                break;
+            case"Snow":
+                Url = "https://github.com/MuChuanSu/Model/raw/main/Test.glb";
+                break;
+            case"Drizzle":
+                Url = "https://github.com/MuChuanSu/Model/raw/main/Test.glb";
+                break;
+            case"Thunderstorm":
+            case"Squall":
+                Url = "https://github.com/MuChuanSu/Model/raw/main/Test.glb";
+                break;
+            case"Fog":
+            case"Mist":
+                Url = "https://github.com/MuChuanSu/Model/raw/main/Test.glb";
+                break;
+            case"Tornado":
+                Url = "https://github.com/MuChuanSu/Model/raw/main/Test.glb";
+                break;
+            case"Smoke":
+            case"Haze":
+            case"Dust":
+            case"Sand":
+            case"Ash":
+                Url = "https://github.com/MuChuanSu/Model/raw/main/Test.glb";
+                break;
+        }
+        return Url;
+    }
+
     public void goBack() {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +124,7 @@ public class ArActivity extends AppCompatActivity implements BackToLast{
         renBuilder = ModelRenderable.builder();
         renBuilder.setSource
                 (this, RenderableSource.builder().setSource(this,modelUri, RenderableSource.SourceType.GLB)
-                        .setScale(0.02f)
+                        .setScale(1.0f)
                         .setRecenterMode(RenderableSource.RecenterMode.ROOT)
                         .build());
 
@@ -104,8 +149,6 @@ public class ArActivity extends AppCompatActivity implements BackToLast{
         arFragment.getArSceneView().getScene().addChild(anchorNode);
         node.select();
     }
-
-
 
 
 

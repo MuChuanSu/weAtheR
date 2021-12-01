@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+
 public class CityDatabaseTest {
     private CityDatabase db;
     private CityDao dao;

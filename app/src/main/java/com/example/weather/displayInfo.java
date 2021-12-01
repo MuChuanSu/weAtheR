@@ -1,6 +1,7 @@
 package com.example.weather;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.SoundEffectConstants;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -45,27 +47,14 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
         finalUrl = mvv.getCityNmURL().getValue();
 
 
-
-
-
-        weatherGIF =findViewById(R.id.gifPlaceId);
-        backToMainButton =findViewById(R.id.backToMainId);
-        arButton = findViewById(R.id.arButtonId);
-        ll = findViewById(R.id.infoLayoutId);
+        setUP();
+        update();
         goToArMethod();
         goBack();
-        update();
+        setPopUps();
 
     }
-
-
-
-
     public void update(){
-//        Bundle extras = getIntent().getExtras();
-
-//        finalUrl = extras.getString("Url");
-//        Toast.makeText(getApplicationContext(), finalUrl, Toast.LENGTH_SHORT).show();
         RequestQueue rQ = Volley.newRequestQueue(getApplicationContext());
         //create a requestQueue to add our request into
 
@@ -113,36 +102,27 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
                     JSONObject sysBlock = allJsonRes.getJSONObject("sys");
                     String country = sysBlock.getString("country");
 
-                    cityNameTv = findViewById(R.id.cityNameTVId);
+
                     cityNameTv.setText(name);
 
-                    tempTv=findViewById(R.id.tempTVId);
-                    tempTv.setText(""+temp_in_C+"°C");
+                    tempTv.setText(+temp_in_C+"°C");
 
-                    maxTempTv=findViewById(R.id.maxTempTVId);
-                    maxTempTv.setText("Max"+temp_max+"°C");
+                    maxTempTv.setText("Max"+temp_max+"°");
 
+                    minTempTv.setText("Min"+temp_min+"°");
 
-                    minTempTv=findViewById(R.id.minTempTVId);
-                    minTempTv.setText("Min"+temp_min+"°C");
-
-                    feelsLikeTv=findViewById(R.id.feelsLikeTVId);
                     feelsLikeTv.setText("Feels like: "+temp_feel+"°C");
 
-                    descriptionTv = findViewById(R.id.descriptionTVId);
                     descriptionTv.setText(mainDescription+":"+"\n("+subDescription+")");
 
-                    pressureTv = findViewById(R.id.pressureTVId);
                     pressureTv.setText("Pressure:\n"+pressure+"hPa");
 
-                    humidityTv=findViewById(R.id.humidityTVId);
                     humidityTv.setText("Humidity:\n"+humidity+"%");
 
-                    windSpeedTv = findViewById(R.id.windSpeedTVId);
                     windSpeedTv.setText("WindSpeed:\n"+windSpeed+"meter/sec");
 
-                    windDegTv = findViewById(R.id.windDegTVId);
                     windDegTv.setText("Wind Direction:\n"+degree+"°");
+
                     showGif();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -151,8 +131,8 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
         }, new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(),finalUrl,Toast.LENGTH_SHORT).show();
+                  Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(),finalUrl,Toast.LENGTH_SHORT).show();
 
             }//note that .show() is necessary for the message to show
         });
@@ -163,15 +143,14 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
     }
 
 
-
-
-
     private void goToArMethod() {
         arButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 v.playSoundEffect(SoundEffectConstants.CLICK);
-                startActivity(new Intent(displayInfo.this,ArActivity.class));
+                Intent i = new Intent(displayInfo.this,ArActivity.class);
+                i.putExtra("MainDescription",descriptionTv.getText().toString());
+                startActivity(i);
             }
         });
     }
@@ -185,6 +164,7 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
             }
         });
     }
+
     public void showGif(){
         switch(mainDescription){
             case "Clear":
@@ -221,5 +201,166 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
                 Glide.with(this).asGif().load(R.raw.smoke).into(weatherGIF);
                 break;
         }
+    }
+
+    private void setUP(){
+        weatherGIF =findViewById(R.id.gifPlaceId);
+        backToMainButton =findViewById(R.id.backToMainId);
+        arButton = findViewById(R.id.arButtonId);
+        ll = findViewById(R.id.infoLayoutId);
+        cityNameTv = findViewById(R.id.cityNameTVId);
+        tempTv=findViewById(R.id.tempTVId);
+        maxTempTv=findViewById(R.id.maxTempTVId);
+        minTempTv=findViewById(R.id.minTempTVId);
+        feelsLikeTv=findViewById(R.id.feelsLikeTVId);
+        descriptionTv = findViewById(R.id.descriptionTVId);
+        pressureTv = findViewById(R.id.pressureTVId);
+        humidityTv=findViewById(R.id.humidityTVId);
+        windSpeedTv = findViewById(R.id.windSpeedTVId);
+        windDegTv = findViewById(R.id.windDegTVId);
+    }
+    private void setPopUps(){
+        cityNameTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(displayInfo.this);
+                builder.setMessage("This is city name")
+                        .setPositiveButton("OK",null);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
+        ///
+        tempTv.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(displayInfo.this);
+            builder.setMessage("This is current temperature in Celsius\n" +
+                    "Celsius is a type of the scales to measure temperature.\n" +
+                    "Do you know other scales?\n"+
+                    "Which scale does your country use?")
+                    .setPositiveButton("OK",null)
+                    .setNeutralButton("Learn more", (dialog, which) -> {
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        String url ="https://www.wikiwand.com/en/Scale_of_temperature";
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                    });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        });
+        ///
+        maxTempTv.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(displayInfo.this);
+            builder.setMessage("This is daily maximum temperature")
+                    .setPositiveButton("OK",null);
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        });
+        ///
+        feelsLikeTv.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(displayInfo.this);
+            builder.setMessage("This is Apparent temperature in Celsius,\n"+
+                    "this means the temperature perceived by human body,\n"+
+                    "it differs from actual temperature due to affection of air temperature,relative humidity and wind speed.")
+                    .setPositiveButton("OK",null)
+                    .setNeutralButton("Learn more", (dialog, which) -> {
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        String url ="https://www.wikiwand.com/en/Apparent_temperature";
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                    });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        });
+        ///
+        minTempTv.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(displayInfo.this);
+            builder.setMessage("This is daily minimum temperature")
+                    .setPositiveButton("OK",null);
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        });
+        ///
+        descriptionTv.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(displayInfo.this);
+            builder.setMessage("This is weather description such as sunny or rain.\n"+
+                    "What is your favorite weather?\n"+
+                    "Can you think of a weather that is rare in your country?")
+                    .setPositiveButton("OK",null)
+                    .setNeutralButton("Learn more", (dialog, which) -> {
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        String url ="https://www.metoffice.gov.uk/weather/learn-about/weather/types-of-weather";
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                    });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        });
+        ///
+        pressureTv.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(displayInfo.this);
+            builder.setMessage("hPa stands for hectoPascals,it is a unit for measuring the pressure exerted from the Earth's atmosphere.")
+                    .setPositiveButton("OK",null)
+                    .setNeutralButton("Learn more", (dialog, which) -> {
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        String url ="https://www.metoffice.gov.uk/weather/learn-about/weather/how-weather-works/high-and-low-pressure";
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                    });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        });
+        ///
+        humidityTv.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(displayInfo.this);
+            builder.setMessage("Humidity is a statistics for measuring the amount of water water vapour in the air.")
+                    .setPositiveButton("OK",null)
+                    .setNeutralButton("Learn more", (dialog, which) -> {
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        String url ="https://www.metoffice.gov.uk/weather/learn-about/weather/types-of-weather/humidity";
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                    });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        });
+        ///
+        windSpeedTv.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(displayInfo.this);
+            builder.setMessage("Wind speed indicates the speed of wind,here it shows how many meters the wind can travel per second.\n "+
+                    "Do you know other units for measuring wind speed?\n"+
+                    "What tools can help us measuring it?")
+                    .setPositiveButton("OK",null)
+                    .setNeutralButton("Learn more", (dialog, which) -> {
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        String url ="https://www.metoffice.gov.uk/weather/guides/observations/how-we-measure-wind";
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                    });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        });
+        ///
+        windDegTv.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(displayInfo.this);
+            builder.setMessage("Wind direction is the direction that wind blows from,"+
+                    "Here it is ub degrees where northwind is 0° and eastwind is 90°.\n" +
+                    "Click the link below to see a cool demonstration of wind flows ")
+                    .setPositiveButton("OK",null)
+                    .setNeutralButton("Learn more", (dialog, which) -> {
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        String url ="https://www.wikiwand.com/en/Wind_direction";
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                    })
+                    .setNegativeButton("Windfinder", (dialog, which) -> {
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        String url ="https://www.windfinder.com/#3/51.2894/9.4922";
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+
+                    });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        });
     }
 }
