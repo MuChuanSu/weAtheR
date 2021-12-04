@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
             android:name=".About"
             android:exported="false"
             android:screenOrientation="portrait" />
@@ -33,7 +36,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

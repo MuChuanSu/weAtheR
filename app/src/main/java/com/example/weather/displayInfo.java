@@ -303,7 +303,7 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
         ///
         humidityTv.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(displayInfo.this);
-            builder.setMessage("Humidity is a statistics for measuring the amount of water vapour in the air.")
+            builder.setMessage("Humidity is a statistics for measuring the amount of water vapour br r rmr in the air.")
                     .setPositiveButton("OK",null)
                     .setNeutralButton("Learn more", (dialog, which) -> {
                         Intent i = new Intent(Intent.ACTION_VIEW);
@@ -334,7 +334,7 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
         windDegTv.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(displayInfo.this);
             builder.setMessage("Wind direction is the direction that wind blows from,"+
-                    "Here it is ub degrees where northwind is 0° and eastwind is 90°.\n" +
+                    "Here it is degrees where northwind is 0° and eastwind is 90°.\n" +
                     "Click the link below to see a cool demonstration of wind flows ")
                     .setPositiveButton("OK",null)
                     .setNeutralButton("Learn more", (dialog, which) -> {
