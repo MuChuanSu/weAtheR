@@ -104,26 +104,17 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
 
 
                     cityNameTv.setText(name);
-
                     tempTv.setText(+temp_in_C+"°C");
-
                     maxTempTv.setText("Max"+temp_max+"°");
-
                     minTempTv.setText("Min"+temp_min+"°");
-
                     feelsLikeTv.setText("Feels like: "+temp_feel+"°C");
-
                     descriptionTv.setText(mainDescription+":"+"\n("+subDescription+")");
-
                     pressureTv.setText("Pressure:\n"+pressure+"hPa");
-
                     humidityTv.setText("Humidity:\n"+humidity+"%");
-
                     windSpeedTv.setText("WindSpeed:\n"+windSpeed+"meter/sec");
-
                     windDegTv.setText("Wind Direction:\n"+degree+"°");
-
                     showGif();
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -312,7 +303,7 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
         ///
         humidityTv.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(displayInfo.this);
-            builder.setMessage("Humidity is a statistics for measuring the amount of water water vapour in the air.")
+            builder.setMessage("Humidity is a statistics for measuring the amount of water vapour in the air.")
                     .setPositiveButton("OK",null)
                     .setNeutralButton("Learn more", (dialog, which) -> {
                         Intent i = new Intent(Intent.ACTION_VIEW);

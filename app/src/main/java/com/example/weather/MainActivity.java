@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -19,24 +20,20 @@ public class MainActivity extends AppCompatActivity  {
 
 
     private Button searchButton;
-    public ImageButton setBtn,abtBtn;
+    public ImageButton setBtn,abtBtn,chatBtn;
     private AutoCompleteTextView searchBar;
     private String result;//
+    private TextView chatBotTxt;
     private final String leftApiUrl ="https://api.openweathermap.org/data/2.5/weather?q=";
     private final String rightApiUrl ="&units=metric&appid=6ab7bc0539aba727a6b08fdc9803c4a1";
     // the json request url format provided by api provider is like the one below:
     // api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
-    // so I had to divide them into 3 parts like declared above
+    // so I had to divide them into 3 parts like declared above to put the user input in
     public CityDao cDao;
     public CityDatabase CDB;
     public VideoView vv;
     public Uri videoUri;
 
-
-
-
-
-    
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +50,15 @@ public class MainActivity extends AppCompatActivity  {
         searchButton = findViewById(R.id.search_button);
         setBtn=findViewById(R.id.settingsBTNID);
         abtBtn=findViewById(R.id.aboutBTNID);
+        chatBtn = findViewById(R.id.chatbotbtn);
+        chatBotTxt = findViewById(R.id.chatbottext);
 
         MainViewModel vM = new ViewModelProvider(this).get(MainViewModel.class);
 
         GoToAbout();
         GoToSettings();
         setSuggestions();
+        goToChatBot();
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,17 +87,9 @@ public class MainActivity extends AppCompatActivity  {
                     Toast.makeText(getApplicationContext(), "City name can't be blank", Toast.LENGTH_SHORT).show();
                 }
 
-                //inside onClick method is getInfoMethod()
-                //which gets the json response and convert info into variables
+
             }
         });
-
-
-
-
-
-
-
     }
     private void setSuggestions(){
         String [] suggestionArray = {};
@@ -170,118 +162,22 @@ public class MainActivity extends AppCompatActivity  {
         return cityArray;
     }
 
+    private void goToChatBot(){
+        chatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                String url ="https://muchuansu.github.io/weArtheRWebsite/chatBot.html";
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
+    }
 
 
 
 
 
 
-//    public void getInfoMethod(){
-//        String finalUrl ="";
-//        String cityName = searchBar.getText().toString().trim();
-//        RequestQueue rQ = Volley.newRequestQueue(getApplicationContext());
-//        //create a requestQueue to add our request into
-//        finalUrl = leftApiUrl+cityName+rightApiUrl;
-//
-//
-//
-//
-//        StringRequest sR = new StringRequest(Request.Method.POST, finalUrl, new Response.Listener<String>() {
-//            @Override
-//                public void onResponse(String response) {
-//                result = "";
-//
-//                try {
-//                    JSONObject allJsonRes = new JSONObject(response);
-//
-//                    String name = allJsonRes.getString("name");
-//                    double visibility = allJsonRes.getDouble("visibility");
-//                    int timeZone =allJsonRes.getInt("timezone");
-//                    //Creates a new JSONArray with values from the JSON string.
-//                    //try/catch are mandatory when creating JSONObject
-//                    //now we extract values from this JsonObject
-//                    JSONArray weatherJsonArr = allJsonRes.getJSONArray("weather");
-//                    //store []weather
-//                    //1.to get mainDescription and subDescription
-//                    //store the []weather part into weatherJsonArr
-//                    //inside this JsonArray,we store the only JsonObject as weatherBlock
-//                    //{}0
-//                    //then get different values from this subJsonObject
-//                    JSONObject weatherBlock = weatherJsonArr.getJSONObject(0);
-//                    //this includes id,main,description,icon
-//                    String mainDescription = weatherBlock.getString("main");
-//                    //get the string under key "main" e.g. "rain"
-//
-//                    String subDescription = weatherBlock.getString("description");
-//                    //e.g."moderate rain"
-//                    JSONObject mainBlock = allJsonRes.getJSONObject("main");
-//                    //access {}main
-//                    double temp_in_C = mainBlock.getDouble("temp");
-//                    //get temperature from {}main
-//                    double temp_feel = mainBlock.getDouble("feels_like");
-//                    double temp_min = mainBlock.getDouble("temp_min");
-//                    double temp_max = mainBlock.getDouble("temp_max");
-//                    double pressure = mainBlock.getDouble("pressure");
-//                    double humidity = mainBlock.getDouble("humidity");
-//                    JSONObject windBlock = allJsonRes.getJSONObject("wind");
-//                    //get wind{}
-//                    double windSpeed = windBlock.getDouble("speed");
-//                    double degree = windBlock.getDouble("deg");
-//                    ///
-//                    JSONObject sysBlock = allJsonRes.getJSONObject("sys");
-//                    String country = sysBlock.getString("country");
-//                    ///
-//
-//
-//                    result += "Current weather in "+ name+", "+country+": "
-//                            +"\ntime zone: "+ timeZone
-//                            +"\nvisibility: "+ visibility
-//                            +"\nTemperature: "+Math.round(temp_in_C)+"°C"
-//                            +"\n"+mainDescription
-//                            +"\n("+subDescription+")"
-//                            +"\nWind speed : "+ windSpeed+" meters per minute"
-//                            +"\ndegree: "+degree
-//                            +"\ntemp feel:"+Math.round(temp_feel)+"°C"
-//                            +"\nmin: "+Math.round(temp_min)+"°C/"+"max"+Math.round(temp_max)+"°C"
-//                            +"\npressure: "+pressure
-//                            +"\nhumidity: "+humidity;
-//
-//
-//
-//                    //then send these values to the displayInfo activity
-//                    //using Intent and putExtra
-//
-//
-//                    Intent i =new Intent(MainActivity.this,displayInfo.class);
-//                    i.putExtra("city",name);
-//                    i.putExtra("mainD",mainDescription);
-//                    i.putExtra("subD",subDescription);
-//                    i.putExtra("temp",temp_in_C);
-//                    i.putExtra("tempMax",temp_max);
-//                    i.putExtra("tempMin",temp_min);
-//                    i.putExtra("tempFeel",temp_feel);
-//                    i.putExtra("pressure",pressure);
-//                    i.putExtra("humidity",humidity);
-//                    i.putExtra("visibility",visibility);
-//                    i.putExtra("speed",windSpeed);
-//                    i.putExtra("deg",degree);
-//                    i.putExtra("timezone",timeZone);
-//                    startActivity(i);
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        }, new Response.ErrorListener(){
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(getApplicationContext(),"Error,check network or spelling",Toast.LENGTH_SHORT).show();
-//            }//note that .show() is necessary for the message to show
-//        });
-//        rQ.add(sR);
-//        //add the request into the queue,Volley will handle it and send it
-//        //and then onResponse() or onErrorResponse() will run
-//        //https://developer.android.com/training/volley/simple
-//    }
+
 }
