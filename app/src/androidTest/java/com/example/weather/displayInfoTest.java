@@ -1,6 +1,7 @@
 package com.example.weather;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static org.junit.Assert.assertTrue;
 
 import android.widget.Toast;
 
@@ -21,6 +22,8 @@ public class displayInfoTest {
     private String cityName = "London";
 
 
+
+
     public void setName(String name) {
         this.name = name;
     }
@@ -32,12 +35,14 @@ public class displayInfoTest {
     }
 
     private  String country;
+    private Boolean testBoo= true;
 
     @Test
     public void update(){
         String Url = leftApiUrl+cityName+rightApiUrl;
         RequestQueue rQ = Volley.newRequestQueue(getApplicationContext());
         //create a requestQueue to add our request into
+
 
         StringRequest sR = new StringRequest(Request.Method.POST, Url, new Response.Listener<String>() {
             @Override
@@ -47,36 +52,31 @@ public class displayInfoTest {
 
                 try {
                     JSONObject allJsonRes = new JSONObject(response);
-
-
                     setName(allJsonRes.getString("name"));
-
-
                     JSONObject sysBlock = allJsonRes.getJSONObject("sys");
                     country = sysBlock.getString("country");
-
-
-
-
-
-
+                    testBoo = true;
                 } catch (JSONException e) {
                     e.printStackTrace();
-
                 }
             }
         }, new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error) {
+                testBoo = false;
+
                 Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_SHORT).show();
+
             }//note that .show() is necessary for the message to show
         });
         rQ.add(sR);
-
+        assertTrue(testBoo);
         //add the request into the queue,Volley will handle it and send it
         //and then onResponse() or onErrorResponse() will run
         //https://developer.android.com/training/volley/simple
     }
+
+
 
 
 

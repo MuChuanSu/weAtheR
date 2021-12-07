@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity  {
     private TextView chatBotTxt;
     private final String leftApiUrl ="https://api.openweathermap.org/data/2.5/weather?q=";
     private final String rightApiUrl ="&units=metric&appid=6ab7bc0539aba727a6b08fdc9803c4a1";
+    private String notFoundToast = "Check your spelling";
+    private String blankToast = "City name can't be blank";
     // the json request url format provided by api provider is like the one below:
     // api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
     // so I had to divide them into 3 parts like declared above to put the user input in
@@ -64,12 +66,9 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 v.playSoundEffect(SoundEffectConstants.CLICK);
-
-//                getInfoMethod();
                 Boolean found =false;
                 String FinalUrl ;
                 String cityName = searchBar.getText().toString();
-
                 if(!cityName.equals("")){
                     String[] array = getCityArray();
                     for(int j=0;j<array.length;j++){
@@ -81,13 +80,13 @@ public class MainActivity extends AppCompatActivity  {
                         }
                     }
                     if (found == false){
-                        Toast.makeText(getApplicationContext(), "Check your spelling", Toast.LENGTH_SHORT).show();
+
+                        Toast.makeText(getApplicationContext(), notFoundToast, Toast.LENGTH_SHORT).show();
                     }
                 }else{
-                    Toast.makeText(getApplicationContext(), "City name can't be blank", Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(getApplicationContext(), blankToast, Toast.LENGTH_SHORT).show();
                 }
-
-
             }
         });
     }

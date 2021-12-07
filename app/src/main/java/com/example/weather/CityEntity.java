@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 public class CityEntity {
 
     //define data types in this class
-    //the constraints and attributes names MUST match what was defined in your .db file
+    //the constraints and attributes names MUST match what was defined in my .db file
     @PrimaryKey @NonNull public int id;
 
     public String name;

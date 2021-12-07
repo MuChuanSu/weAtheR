@@ -118,8 +118,6 @@ public class ArActivity extends AppCompatActivity implements BackToLast{
                 clearArray.add(clear7);
 
                 Collections.shuffle(clearArray);
-
-
                 Url = clearArray.get(0);
 
                 break;
@@ -212,13 +210,11 @@ public class ArActivity extends AppCompatActivity implements BackToLast{
                         .setScale(2.0f)
                         .setRecenterMode(RenderableSource.RecenterMode.ROOT)
                         .build());
-
                 //All build() methods in Sceneform return a CompletableFuture.
                 //The object is built on a separate thread and the callback function is executed on the main thread.
-
+                //https://developers.google.com/sceneform/develop/create-renderables
                 future = renBuilder.build();
                 future.thenAccept((renderable) -> addNodeToScene(arFragment,anchor,renderable))
-
                 .exceptionally(throwable -> {
                     Toast.makeText(ArActivity.this,"Error,check network connection",Toast.LENGTH_SHORT);
                     return null;

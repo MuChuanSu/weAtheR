@@ -57,14 +57,11 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
     public void update(){
         RequestQueue rQ = Volley.newRequestQueue(getApplicationContext());
         //create a requestQueue to add our request into
-
         StringRequest sR = new StringRequest(Request.Method.POST, finalUrl, new Response.Listener<String>() {
             @Override
                 public void onResponse(String response) {
-
                 try {
                     JSONObject allJsonRes = new JSONObject(response);
-
                     String name = allJsonRes.getString("name");
                     double visibility = allJsonRes.getDouble("visibility");
                     int timeZone =allJsonRes.getInt("timezone");
@@ -82,7 +79,6 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
                     //this includes id,main,description,icon
                     mainDescription = weatherBlock.getString("main");
                     //get the string under key "main" e.g. "rain"
-
                     String subDescription = weatherBlock.getString("description");
                     //e.g."moderate rain"
                     JSONObject mainBlock = allJsonRes.getJSONObject("main");
@@ -101,7 +97,6 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
                     ///
                     JSONObject sysBlock = allJsonRes.getJSONObject("sys");
                     String country = sysBlock.getString("country");
-
 
                     cityNameTv.setText(name);
                     tempTv.setText(+temp_in_C+"°C");
