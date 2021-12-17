@@ -1,5 +1,5 @@
 package com.example.weather;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,14 +7,11 @@ import android.view.SoundEffectConstants;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,22 +19,18 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class displayInfo extends AppCompatActivity implements BackToLast{
-    private String mainDescription,subDescription,city;
+    private String mainDescription,subDescription,name;
     private ImageView weatherGIF;
     private ImageButton backToMainButton,arButton;
     private TextView cityNameTv,tempTv,minTempTv,maxTempTv,feelsLikeTv,descriptionTv,pressureTv,
             humidityTv,windSpeedTv,windDegTv;
-    private LinearLayout ll;
     private String finalUrl;
     private MainViewModel mvv;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,30 +38,27 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
 
         mvv = new ViewModelProvider(this).get(MainViewModel.class);
         finalUrl = mvv.getCityNmURL().getValue();
-
-
+        //get the Url for api call from ViewModel class
         setUP();
         update();
         goToArMethod();
         goBack();
         setPopUps();
-
     }
     public void update(){
         RequestQueue rQ = Volley.newRequestQueue(getApplicationContext());
         //create a requestQueue to add our request into
         StringRequest sR = new StringRequest(Request.Method.POST, finalUrl, new Response.Listener<String>() {
+            @SuppressLint("SetTextI18n")
             @Override
                 public void onResponse(String response) {
                 try {
-                    JSONObject allJsonRes = new JSONObject(response);
-                    String name = allJsonRes.getString("name");
-                    double visibility = allJsonRes.getDouble("visibility");
-                    int timeZone =allJsonRes.getInt("timezone");
+                    JSONObject allJsonResponse = new JSONObject(response);
+                    name = allJsonResponse.getString("name");
                     //Creates a new JSONArray with values from the JSON string.
                     //try/catch are mandatory when creating JSONObject
                     //now we extract values from this JsonObject
-                    JSONArray weatherJsonArr = allJsonRes.getJSONArray("weather");
+                    JSONArray weatherJsonArr = allJsonResponse.getJSONArray("weather");
                     //store []weather
                     //1.to get mainDescription and subDescription
                     //store the []weather part into weatherJsonArr
@@ -79,9 +69,9 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
                     //this includes id,main,description,icon
                     mainDescription = weatherBlock.getString("main");
                     //get the string under key "main" e.g. "rain"
-                    String subDescription = weatherBlock.getString("description");
+                    subDescription = weatherBlock.getString("description");
                     //e.g."moderate rain"
-                    JSONObject mainBlock = allJsonRes.getJSONObject("main");
+                    JSONObject mainBlock = allJsonResponse.getJSONObject("main");
                     //access {}main
                     double temp_in_C = mainBlock.getDouble("temp");
                     //get temperature from {}main
@@ -90,14 +80,11 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
                     double temp_max = mainBlock.getDouble("temp_max");
                     double pressure = mainBlock.getDouble("pressure");
                     double humidity = mainBlock.getDouble("humidity");
-                    JSONObject windBlock = allJsonRes.getJSONObject("wind");
+                    JSONObject windBlock = allJsonResponse.getJSONObject("wind");
                     //get wind{}
                     double windSpeed = windBlock.getDouble("speed");
                     double degree = windBlock.getDouble("deg");
                     ///
-                    JSONObject sysBlock = allJsonRes.getJSONObject("sys");
-                    String country = sysBlock.getString("country");
-
                     cityNameTv.setText(name);
                     tempTv.setText(+temp_in_C+"°C");
                     maxTempTv.setText("Max"+temp_max+"°");
@@ -109,7 +96,6 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
                     windSpeedTv.setText("WindSpeed:\n"+windSpeed+"meter/sec");
                     windDegTv.setText("Wind Direction:\n"+degree+"°");
                     showGif();
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -118,17 +104,19 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
             @Override
             public void onErrorResponse(VolleyError error) {
                   Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_SHORT).show();
-//                Toast.makeText(getApplicationContext(),finalUrl,Toast.LENGTH_SHORT).show();
-
             }//note that .show() is necessary for the message to show
         });
         rQ.add(sR);
         //add the request into the queue,Volley will handle it and send it
         //and then onResponse() or onErrorResponse() will run
-        //https://developer.android.com/training/volley/simple
+
+        /*
+        I learned how to use volley to make requests and extract JSON values from the learning materials below
+        https://developer.android.com/training/volley/simple
+        https://www.youtube.com/watch?v=f2oSRBwN2HY&t=463s
+         */
+
     }
-
-
     private void goToArMethod() {
         arButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,7 +128,6 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
             }
         });
     }
-
     public void goBack() {
         backToMainButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,7 +137,6 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
             }
         });
     }
-
     public void showGif(){
         switch(mainDescription){
             case "Clear":
@@ -188,12 +174,10 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
                 break;
         }
     }
-
     private void setUP(){
         weatherGIF =findViewById(R.id.gifPlaceId);
         backToMainButton =findViewById(R.id.backToMainId);
         arButton = findViewById(R.id.arButtonId);
-        ll = findViewById(R.id.infoLayoutId);
         cityNameTv = findViewById(R.id.cityNameTVId);
         tempTv=findViewById(R.id.tempTVId);
         maxTempTv=findViewById(R.id.maxTempTVId);
@@ -298,7 +282,7 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
         ///
         humidityTv.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(displayInfo.this);
-            builder.setMessage("Humidity is a statistics for measuring the amount of water vapour br r rmr in the air.")
+            builder.setMessage("Humidity is a statistics for measuring the amount of water vapour in the air.")
                     .setPositiveButton("OK",null)
                     .setNeutralButton("Learn more", (dialog, which) -> {
                         Intent i = new Intent(Intent.ACTION_VIEW);
@@ -343,7 +327,6 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
                         String url ="https://www.windfinder.com/#3/51.2894/9.4922";
                         i.setData(Uri.parse(url));
                         startActivity(i);
-
                     });
             AlertDialog alertDialog = builder.create();
             alertDialog.show();

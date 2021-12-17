@@ -1,5 +1,4 @@
 package com.example.weather;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,64 +7,82 @@ import android.view.SoundEffectConstants;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.ar.core.Anchor;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.assets.RenderableSource;
 import com.google.ar.sceneform.rendering.ModelRenderable;
-import com.google.ar.sceneform.rendering.Renderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.BaseArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.concurrent.CompletableFuture;
 
 public class ArActivity extends AppCompatActivity implements BackToLast{
     private ArFragment arFragment;
-    private ModelRenderable modelRenderable;
-
     private ImageButton backBtn;
-    private ModelRenderable.Builder renBuilder;
-    private CompletableFuture<ModelRenderable> future;
-    private View view;
 
-    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ar);
-        
         backBtn = findViewById(R.id.backToDisplayId);
-
         goBack();
 
-        arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
-
-        //
-
+        //retrieve the main description from displayInfo activity
         Intent ii = getIntent();
         String mainDes = ii.getStringExtra("MainDescription");
-
+        //pick the AR model uri based on the weather main description
         Uri uriModel = Uri.parse(pickArModel(mainDes));
-
-
-
-
+        //
+        arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
+        //arFragment is an opponent that AR happens, it also automatically checks if the device is AR compatible.
         arFragment.setOnTapArPlaneListener(new BaseArFragment.OnTapArPlaneListener() {
             @Override
             public void onTapPlane(HitResult hitResult, Plane plane, MotionEvent motionEvent) {
-                //create anchor using hit result
                 {
+                    //create an anchor using hit result (where the user tapped on the screen)
+                    //(anchor is the reference of a fixed position in the real world,it also
+                    // update the model's position per frame so when the camera moves, we can see
+                    // different angles of the model)
+                    // then Create an AnchorNode with the specified anchor.
                     Anchor anchor = hitResult.createAnchor();
-                    //call placeObject() to actually render object in the fragment
-                    placeObject(arFragment,anchor,uriModel);
+                    AnchorNode anchorNode = new AnchorNode(anchor);
+                    arFragment.getArSceneView().getScene().addChild(anchorNode);
+                    // create a transformable node that we can attach a 3D object to,we must do
+                    // so users can drag/scale up and down/rotate the rendered 3D model.
+                    TransformableNode tNode = new TransformableNode(arFragment.getTransformationSystem());
+                    tNode.getScaleController().setMinScale(0.1f);
+                    // the line above was added to let us pinch and scale down the model more
+                    // due many participants tried to do this in user testing.
+                    // then we attach the transformable node to the anchor node
+                    anchorNode.addChild(tNode);
+                    tNode.select();
+                    //
+                    ModelRenderable.builder()
+                            .setSource(ArActivity.this, RenderableSource.builder().setSource(ArActivity.this,uriModel, RenderableSource.SourceType.GLB)
+                                            .setScale(2.0f)//set the default size of model when rendered 2.0f means it will be 200% of the original size
+                                            .setRecenterMode(RenderableSource.RecenterMode.ROOT)
+                                            .build()).build().thenAccept((renderable) ->tNode.setRenderable(renderable))
+                            //lines above renders a .GLB 3D model from the remote source (git hub)
+                            //finally, setRenderable() will decide which 3D model will be attached on the transformable node
+                            //the attached 3D model will then be rendered on the node.
+                            .exceptionally(throwable -> {
+                                //if there's error when trying to render the model,
+                                //e.g. can't retrieve model source due no internet, the toast will show.
+                                Toast.makeText(ArActivity.this,"Error,check network connection",Toast.LENGTH_SHORT).show();
+                                return null;
+                            });
+                    /*
+                    I learned to write codes in this block from these learning resources below:
+                    https://developers.google.com/sceneform/develop/create-renderables
+                    https://medium.com/geekculture/develop-your-helloar-app-in-android-studio-using-arcore-and-sceneform-d032e5788036
+                     */
+
                 }
             }
         });
@@ -83,13 +100,9 @@ public class ArActivity extends AppCompatActivity implements BackToLast{
         String rain7 = "https://github.com/MuChuanSu/Model/raw/main/rainQ7.glb";
         String rain8 = "https://github.com/MuChuanSu/Model/raw/main/rainQ8.glb";
         String rain9 = "https://github.com/MuChuanSu/Model/raw/main/rainQ9.glb";
-        String clear1 = "https://github.com/MuChuanSu/Model/raw/main/sunnyQ1.glb";
-        String clear2 = "https://github.com/MuChuanSu/Model/raw/main/sunnyQ2.glb";
-        String clear3 = "https://github.com/MuChuanSu/Model/raw/main/sunnyQ3.glb";
-        String clear4 = "https://github.com/MuChuanSu/Model/raw/main/sunnyQ4.glb";
-        String clear5 = "https://github.com/MuChuanSu/Model/raw/main/sunnyQ5.glb";
-        String clear6 = "https://github.com/MuChuanSu/Model/raw/main/sunnyQ6.glb";
-        String clear7 = "https://github.com/MuChuanSu/Model/raw/main/sunnyQ7.glb";
+        String clear1 = "https://github.com/MuChuanSu/Model/raw/main/sunQ1.glb";
+        String clear2 = "https://github.com/MuChuanSu/Model/raw/main/sunQ2.glb";
+        String clear3 = "https://github.com/MuChuanSu/Model/raw/main/sunQ3.glb";
         String cloud1 = "https://github.com/MuChuanSu/Model/raw/main/cloud1.glb";
         String cloud2 = "https://github.com/MuChuanSu/Model/raw/main/cloud2.glb";
         String cloud3 = "https://github.com/MuChuanSu/Model/raw/main/cloud3.glb";
@@ -104,26 +117,18 @@ public class ArActivity extends AppCompatActivity implements BackToLast{
         String thunder2 = "https://github.com/MuChuanSu/Model/raw/main/thunderQ1.glb";
         String fog1 = "https://github.com/MuChuanSu/Model/raw/main/fogQ1.glb";
         String fog2 = "https://github.com/MuChuanSu/Model/raw/main/fogQ2.glb";
-
-
         switch(Main){
             case "Clear":
-                ArrayList<String> clearArray = new ArrayList<String>();
+                ArrayList<String> clearArray = new ArrayList<>();
                 clearArray.add(clear1);
                 clearArray.add(clear2);
                 clearArray.add(clear3);
-                clearArray.add(clear4);
-                clearArray.add(clear5);
-                clearArray.add(clear6);
-                clearArray.add(clear7);
-
                 Collections.shuffle(clearArray);
                 Url = clearArray.get(0);
-
                 break;
             case "Rain":
             case"Drizzle":
-                ArrayList<String> rainArray = new ArrayList<String>();
+                ArrayList<String> rainArray = new ArrayList<>();
                 rainArray.add(rain1);
                 rainArray.add(rain2);
                 rainArray.add(rain3);
@@ -133,13 +138,12 @@ public class ArActivity extends AppCompatActivity implements BackToLast{
                 rainArray.add(rain7);
                 rainArray.add(rain8);
                 rainArray.add(rain9);
-
                 Collections.shuffle(rainArray);
                 Url =rainArray.get(0);
                 //get a random model in the rain array,the order changes everytime we call shuffle()
                 break;
             case"Clouds":
-                ArrayList<String> cloudArray = new ArrayList<String>();
+                ArrayList<String> cloudArray = new ArrayList<>();
                 cloudArray.add(cloud1);
                 cloudArray.add(cloud2);
                 cloudArray.add(cloud3);
@@ -147,7 +151,7 @@ public class ArActivity extends AppCompatActivity implements BackToLast{
                 Url = cloudArray.get(0);
                 break;
             case"Snow":
-                ArrayList<String> snowArray = new ArrayList<String>();
+                ArrayList<String> snowArray = new ArrayList<>();
                 snowArray.add(snow1);
                 snowArray.add(snow2);
                 snowArray.add(snow3);
@@ -155,33 +159,18 @@ public class ArActivity extends AppCompatActivity implements BackToLast{
                 snowArray.add(snow5);
                 snowArray.add(snow6);
                 snowArray.add(snow7);
-
                 Collections.shuffle(snowArray);
                 Url = snowArray.get(0);
                 break;
             case"Thunderstorm":
-                ArrayList<String> thunderArray = new ArrayList<String>();
+                ArrayList<String> thunderArray = new ArrayList<>();
                 thunderArray.add(thunder1);
                 thunderArray.add(thunder2);
                 Collections.shuffle(thunderArray);
                 Url = thunderArray.get(0);
                 break;
-
-
             case"Squall":
-                Url = "https://github.com/MuChuanSu/Model/raw/main/Test.glb";
-                break;
-            case"Fog":
-            case"Mist":
-                ArrayList<String> fogMistArray = new ArrayList<String>();
-                fogMistArray.add(fog1);
-                fogMistArray.add(fog2);
-                Collections.shuffle(fogMistArray);
-                Url = fogMistArray.get(0);
-                break;
             case"Tornado":
-                Url = "https://github.com/MuChuanSu/Model/raw/main/Test.glb";
-                break;
             case"Smoke":
             case"Haze":
             case"Dust":
@@ -189,10 +178,17 @@ public class ArActivity extends AppCompatActivity implements BackToLast{
             case"Ash":
                 Url = "https://github.com/MuChuanSu/Model/raw/main/Test.glb";
                 break;
+            case"Fog":
+            case"Mist":
+                ArrayList<String> fogMistArray = new ArrayList<>();
+                fogMistArray.add(fog1);
+                fogMistArray.add(fog2);
+                Collections.shuffle(fogMistArray);
+                Url = fogMistArray.get(0);
+                break;
         }
         return Url;
     }
-
     public void goBack() {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,35 +198,4 @@ public class ArActivity extends AppCompatActivity implements BackToLast{
             }
         });
     }
-
-    private void placeObject(ArFragment arFragment,Anchor anchor,Uri modelUri){
-        renBuilder = ModelRenderable.builder();
-        renBuilder.setSource
-                (this, RenderableSource.builder().setSource(this,modelUri, RenderableSource.SourceType.GLB)
-                        .setScale(2.0f)
-                        .setRecenterMode(RenderableSource.RecenterMode.ROOT)
-                        .build());
-                //All build() methods in Sceneform return a CompletableFuture.
-                //The object is built on a separate thread and the callback function is executed on the main thread.
-                //https://developers.google.com/sceneform/develop/create-renderables
-                future = renBuilder.build();
-                future.thenAccept((renderable) -> addNodeToScene(arFragment,anchor,renderable))
-                .exceptionally(throwable -> {
-                    Toast.makeText(ArActivity.this,"Error,check network connection",Toast.LENGTH_SHORT);
-                    return null;
-                });
-    }
-
-
-    private void addNodeToScene(ArFragment arFragment, Anchor anchor, Renderable renderable){
-        AnchorNode anchorNode = new AnchorNode(anchor);
-        TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
-        node.setRenderable(renderable);
-        node.setParent(anchorNode);
-        arFragment.getArSceneView().getScene().addChild(anchorNode);
-        node.select();
-    }
-
-
-
 }

@@ -8,7 +8,6 @@
     tools:context=".ArActivity">
 
 
-
     <fragment
         android:id="@+id/fragment"
         android:name="com.google.ar.sceneform.ux.ArFragment"
