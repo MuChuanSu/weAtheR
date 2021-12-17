@@ -26,3 +26,13 @@ public abstract class CityDatabase extends RoomDatabase {
         return cDB;
     }
 }
+/***************************************************************************************
+ * I learned to use room Database with a local db file from the learning resources below:
+ *
+ *    Title: <confused about Populating AutoCompleteTextView Suggestions with a Room Database>
+ *    Author: <MikeT>
+ *    Date: <17/12/2021>
+ *    Code version: <N/A>
+ *    Availability: <https://stackoverflow.com/questions/69683821/confused-about-populating-autocompletetextview-suggestions-with-a-room-database/69684400?noredirect=1#comment123194210_69684400>
+ *
+ ***************************************************************************************/

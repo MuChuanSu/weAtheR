@@ -77,11 +77,24 @@ public class ArActivity extends AppCompatActivity implements BackToLast{
                                 Toast.makeText(ArActivity.this,"Error,check network connection",Toast.LENGTH_SHORT).show();
                                 return null;
                             });
-                    /*
-                    I learned to write codes in this block from these learning resources below:
-                    https://developers.google.com/sceneform/develop/create-renderables
-                    https://medium.com/geekculture/develop-your-helloar-app-in-android-studio-using-arcore-and-sceneform-d032e5788036
-                     */
+
+
+                    /***************************************************************************************
+                     * I learned to write codes in this block from the learning resources below:
+                     *
+                     *    Title: <Create a Renderable-Load 3D models at runtime>
+                     *    Author: <Google>
+                     *    Date: <17/12/2021>
+                     *    Code version: <N/A>
+                     *    Availability: <https://developers.google.com/sceneform/develop/create-renderables#load_3d_models_at_runtime>
+                     *
+                     *    Title: <Develop your HelloAR app in Android studio using ARCore and Sceneform>
+                     *    Author: <Vishnu Sivan>
+                     *    Date: <7/12/2021>
+                     *    Code version: <N/A>
+                     *    Availability: <https://medium.com/geekculture/develop-your-helloar-app-in-android-studio-using-arcore-and-sceneform-d032e5788036>
+                     *
+                     ***************************************************************************************/
 
                 }
             }

@@ -110,11 +110,24 @@ public class displayInfo extends AppCompatActivity implements BackToLast{
         //add the request into the queue,Volley will handle it and send it
         //and then onResponse() or onErrorResponse() will run
 
-        /*
-        I learned how to use volley to make requests and extract JSON values from the learning materials below
-        https://developer.android.com/training/volley/simple
-        https://www.youtube.com/watch?v=f2oSRBwN2HY&t=463s
-         */
+
+        /***************************************************************************************
+         * I learned how to use weather API and volley to make requests and extract JSON values
+         * from the learning materials below:
+         *
+         *    Title: <Send a simple request>
+         *    Author: <Google>
+         *    Date: <17/12/2021>
+         *    Code version: <N/A>
+         *    Availability: <https://developer.android.com/training/volley/simple>
+         *
+         *    Title: <Build a Weather App in Android Studio | Volley Library | OpenWeatherMap API>
+         *    Author: <Sandip Bhattacharya>
+         *    Date: <7/12/2021>
+         *    Code version: <N/A>
+         *    Availability: <https://www.youtube.com/watch?v=f2oSRBwN2HY&t=463s>
+         *
+         ***************************************************************************************/
 
     }
     private void goToArMethod() {
